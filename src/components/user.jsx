@@ -1,4 +1,5 @@
 import React from "react";
+import { Dimmer, Loader, Image, Segment } from "semantic-ui-react";
 import Header from "./header";
 import history from "../history";
 import CardSection from "./card";
@@ -13,11 +14,11 @@ class User extends React.Component {
     //console.log(props.location.state);
     this.loadUser();
     this.state = this.props.location.state;
-    this.state.plan = "";
   }
-  componentDidMount = async () => {
+  componentWillUpdate = async () => {
+    this.setState({ requestSent: true });
     const info = await axios.get(URL + "/user/getInfo?_id=" + this.state._id);
-    if (info.data.length <= 0) {
+    if (info.data === "NOT FOUND") {
       history.goBack();
       return;
     }
@@ -31,13 +32,34 @@ class User extends React.Component {
             sub_id: res.data.sub_id
           };
         });
-    //console.log(info);
+    this.setState({ requestSent: false });
+    this.setState(info.data);
+  };
+
+  componentDidMount = async () => {
+    this.setState({ requestSent: true });
+    const info = await axios.get(URL + "/user/getInfo?_id=" + this.state._id);
+    if (info.data === "NOT FOUND") {
+      history.goBack();
+      return;
+    }
+    if (info.data.id.length > 0)
+      await axios
+        .get(URL + "/user/subscriptions/?id=" + this.state.id)
+        .then(res => {
+          info.data.existingPlan = {
+            id: res.data.plan.id,
+            name: res.data.plan.nickname,
+            sub_id: res.data.sub_id
+          };
+        });
+    this.setState({ requestSent: false });
     this.setState(info.data);
   };
 
   loadUser = () => {
     if (!sessionStorage.getItem("user")) {
-      history.goBack();
+      history.push("/login");
       return;
     }
   };
@@ -90,8 +112,15 @@ class User extends React.Component {
   };
 
   render() {
-    //console.log(this.state);
-    return (
+    return this.state.requestSent ? (
+      <Segment>
+        <Dimmer active>
+          <Loader content="Loading" />
+        </Dimmer>
+
+        <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
+      </Segment>
+    ) : (
       <div>
         <Header name={this.state.name} credits={this.state.credits} />
         {this.getTabToRender()}

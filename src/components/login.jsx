@@ -13,8 +13,7 @@ class Login extends React.Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   validate = async () => {
-    let data = { credits: 0 },
-      flag = false;
+    let data = { credits: 0 };
     this.setState({ requestSent: true });
     let res = await axios
       .get(
@@ -29,29 +28,15 @@ class Login extends React.Component {
       });
 
     this.setState({ requestSent: false });
-    if (res.data.length > 0) {
-      flag = true;
+    if (res.data !== "NOT FOUND") {
       data = res.data[0];
       data.existingPlan = "none";
-    } else {
-      alert("Incorrect Details");
-    }
-
-    if (flag) {
-      if (data.id.length > 0) {
-        await axios
-          .get(URL + "/user/subscriptions/?id=" + data.id)
-          .then(res => {
-            let plan = res.data.plan;
-            data.existingPlan = {
-              id: plan.id,
-              name: plan.nickname,
-              sub_id: res.data.sub_id
-            };
-          });
-      }
+      data.plan = "";
+      data.requestSent = false;
       sessionStorage.setItem("user", JSON.stringify(data._id));
       history.push("/user", data);
+    } else {
+      alert("Incorrect Details");
     }
   };
 

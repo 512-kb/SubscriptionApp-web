@@ -83,6 +83,8 @@ class Register extends React.Component {
         this.setState({ requestSent: false });
         sessionStorage.setItem("user", JSON.stringify(res.data._id));
         res.data.existingPlan = "none";
+        res.data.plan = "";
+        res.data.requestSent = false;
         history.push("/user", res.data);
       });
   };
