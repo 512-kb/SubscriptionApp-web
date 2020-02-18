@@ -39,7 +39,6 @@ class User extends React.Component {
   loadUser = () => {
     if (!sessionStorage.getItem("user")) {
       history.push("/login");
-      return;
     }
   };
 
