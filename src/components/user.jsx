@@ -15,28 +15,7 @@ class User extends React.Component {
     this.loadUser();
     this.state = this.props.location.state;
   }
-  // componentWillUpdate = async () => {
-  //   this.setState({ requestSent: true });
-  //   const info = await axios.get(URL + "/user/getInfo?_id=" + this.state._id);
-  //   if (info.data === "NOT FOUND") {
-  //     history.goBack();
-  //     return;
-  //   }
-  //   if (info.data.id.length > 0)
-  //     await axios
-  //       .get(URL + "/user/subscriptions/?id=" + this.state.id)
-  //       .then(res => {
-  //         info.data.existingPlan = {
-  //           id: res.data.plan.id,
-  //           name: res.data.plan.nickname,
-  //           sub_id: res.data.sub_id
-  //         };
-  //       });
-  //   this.setState({ requestSent: false });
-  //   this.setState(info.data);
-  // };
-
-  componentDidMount = async () => {
+  componentWillUpdate = async () => {
     this.setState({ requestSent: true });
     const info = await axios.get(URL + "/user/getInfo?_id=" + this.state._id);
     if (info.data === "NOT FOUND") {
@@ -56,6 +35,27 @@ class User extends React.Component {
     this.setState({ requestSent: false });
     this.setState(info.data);
   };
+
+  // componentDidMount = async () => {
+  //   this.setState({ requestSent: true });
+  //   const info = await axios.get(URL + "/user/getInfo?_id=" + this.state._id);
+  //   if (info.data === "NOT FOUND") {
+  //     history.goBack();
+  //     return;
+  //   }
+  //   if (info.data.id.length > 0)
+  //     await axios
+  //       .get(URL + "/user/subscriptions/?id=" + this.state.id)
+  //       .then(res => {
+  //         info.data.existingPlan = {
+  //           id: res.data.plan.id,
+  //           name: res.data.plan.nickname,
+  //           sub_id: res.data.sub_id
+  //         };
+  //       });
+  //   this.setState({ requestSent: false });
+  //   this.setState(info.data);
+  // };
 
   loadUser = () => {
     if (!sessionStorage.getItem("user")) {
