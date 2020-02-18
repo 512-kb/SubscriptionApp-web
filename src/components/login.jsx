@@ -13,7 +13,7 @@ class Login extends React.Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   validate = async () => {
-    let data = { credits: 0 };
+    let data = new Object();
     this.setState({ requestSent: true });
     let res = await axios
       .get(
@@ -28,15 +28,15 @@ class Login extends React.Component {
       });
 
     this.setState({ requestSent: false });
-    if (res.data !== "NOT FOUND") {
-      data = res.data[0];
+    if (res.data === "NOT FOUND") alert("Incorrect Details");
+    else {
+      data = res.data;
       data.existingPlan = "none";
       data.plan = "";
+      data.credits = 0;
       data.requestSent = false;
       sessionStorage.setItem("user", JSON.stringify(data._id));
       history.push("/user", data);
-    } else {
-      alert("Incorrect Details");
     }
   };
 
