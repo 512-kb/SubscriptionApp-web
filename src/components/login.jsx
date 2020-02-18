@@ -13,7 +13,7 @@ class Login extends React.Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   validate = async () => {
-    let data = new Object();
+    let data = {};
     this.setState({ requestSent: true });
     let res = await axios
       .get(
