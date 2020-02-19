@@ -24,7 +24,7 @@ class User extends React.Component {
     }
     if (info.data.id.length > 0)
       await axios
-        .get(URL + "/user/subscriptions/?id=" + this.state.id)
+        .get(URL + "/user/subscriptions/?id=" + info.data.id)
         .then(res => {
           info.data.existingPlan = {
             id: res.data.plan.id,
